@@ -10,6 +10,8 @@ const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  console.log("in _app");
+  console.log(session);
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />

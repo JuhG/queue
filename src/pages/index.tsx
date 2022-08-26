@@ -1,5 +1,7 @@
 import type { NextPage } from "next";
+import { useSession, signIn, getSession, signOut } from "next-auth/react";
 import Head from "next/head";
+import { useEffect } from "react";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
@@ -7,6 +9,15 @@ const Home: NextPage = () => {
     "example.hello",
     { text: "from tRPC" },
   ]);
+
+  const session = useSession();
+  console.log(session);
+
+  useEffect(() => {
+    getSession().then((session) => {
+      console.log("session", session);
+    });
+  }, []);
 
   return (
     <>
@@ -45,6 +56,17 @@ const Home: NextPage = () => {
           </ul>
 
           <div>{data ? <p>{data.greeting}</p> : <p>Loading..</p>}</div>
+
+          <div>
+            {session && session.status === "authenticated" ? (
+              <>
+                <p>{session.data?.user?.email}</p>
+                <button onClick={() => signOut()}>Log out</button>
+              </>
+            ) : (
+              <button onClick={() => signIn()}>Log in</button>
+            )}
+          </div>
         </div>
       </div>
     </>
